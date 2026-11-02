@@ -1,0 +1,7 @@
+target/
+nbproject/private/
+nb-configuration.xml
+*.war
+*.log
+.idea/
+*.iml
