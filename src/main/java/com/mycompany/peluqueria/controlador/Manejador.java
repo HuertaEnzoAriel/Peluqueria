@@ -165,7 +165,20 @@ public class Manejador extends HttpServlet {
 
                 // ---------- TURNO ----------
                 case "/turno/listar":
-                    request.setAttribute("lista", turnoFacade.findAll());
+                    String filtro = request.getParameter("estado");
+                    if (vacio(filtro)) {
+                        request.setAttribute("lista", turnoFacade.findAll());
+                    } else {
+                        Estado estadoFiltro;
+                        try {
+                            estadoFiltro = Estado.valueOf(filtro.trim());
+                        } catch (IllegalArgumentException ex) {
+                            throw new IllegalArgumentException("El estado indicado no es válido.");
+                        }
+                        request.setAttribute("lista", turnoFacade.findByEstado(estadoFiltro));
+                        request.setAttribute("estadoFiltro", estadoFiltro);
+                    }
+                    request.setAttribute("estados", Estado.values());
                     url = "/WEB-INF/vista/turno/listar.jsp";
                     break;
 

@@ -40,6 +40,11 @@ public class TurnoFacade extends AbstractFacade<Turno> {
                 + "JOIN FETCH t.servicioIdservicio ORDER BY t.fechaInicio", Turno.class)
                 .getResultList();
     }
+    public List<Turno> findByEstado(Estado estado) {
+        return em.createQuery("SELECT t FROM Turno t JOIN FETCH t.clienteIdcliente "
+                + "JOIN FETCH t.servicioIdservicio WHERE t.estado = :estado ORDER BY t.fechaInicio", Turno.class)
+                .setParameter("estado", estado).getResultList();
+    }
     /** Turnos de un servicio, con su cliente, ordenados por fecha de inicio. */
     public List<Turno> findByServicio(Integer idservicio) {
         return em.createQuery("SELECT t FROM Turno t JOIN FETCH t.clienteIdcliente "

@@ -85,3 +85,7 @@ input:focus, select:focus { border-color:var(--fucsia); }
   table { display:block; overflow-x:auto; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
+/* Filtro de turnos por estado */
+.filtro { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
+.filtro label { margin:0; }
+.filtro select { width:auto; min-width:220px; }

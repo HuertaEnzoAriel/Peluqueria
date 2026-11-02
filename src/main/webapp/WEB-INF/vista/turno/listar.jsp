@@ -19,7 +19,23 @@
                 </div>
                 <a class="btn verde" href="${pageContext.request.contextPath}/turno/nuevo">Nuevo turno</a>
             </div>
-
+            <form class="filtro" method="get" action="${pageContext.request.contextPath}/turno/listar">
+                <label for="estado">Estado</label>
+                <select id="estado" name="estado">
+                    <option value="">Todos los estados</option>
+                    <c:forEach var="e" items="${estados}">
+                        <option value="${e}" ${e == estadoFiltro ? 'selected' : ''}>
+                            <c:out value="${e}"/>
+                        </option>
+                    </c:forEach>
+                </select>
+                <br>
+                <button type="submit" class="btn">Filtrar</button>
+                <c:if test="${not empty estadoFiltro}">
+                    <a class="btn gris" href="${pageContext.request.contextPath}/turno/listar">Quitar filtro</a>
+                </c:if>
+            </form>
+            <br>
             <table>
                 <thead>
                     <tr>
@@ -54,7 +70,12 @@
                     </c:forEach>
                     <c:if test="${empty lista}">
                         <tr>
-                            <td colspan="6" class="vacio-msg">Todavía no hay turnos. Reservá el primero con “Nuevo turno”.</td>
+                            <td colspan="6" class="vacio-msg">
+                                <c:choose>
+                                    <c:when test="${not empty estadoFiltro}">No hay turnos con ese estado.</c:when>
+                                    <c:otherwise>Todavía no hay turnos. Reservá el primero con “Nuevo turno”.</c:otherwise>
+                                </c:choose>
+                            </td>
                         </tr>
                     </c:if>
                 </tbody>
