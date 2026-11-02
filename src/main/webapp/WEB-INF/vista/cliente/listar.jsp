@@ -1,5 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="jakarta.tags.core"%>
+<%@taglib prefix="fn" uri="jakarta.tags.functions"%>
 <!DOCTYPE html>
 <html lang="es">
     <head>
@@ -23,7 +24,7 @@
                 <thead>
                     <tr>
                         <th>Nombre</th>
-                        <th>Teléfono</th>
+                        <th>WhatsApp</th>
                         <th>Email</th>
                         <th></th>
                     </tr>
@@ -32,7 +33,17 @@
                     <c:forEach var="cli" items="${lista}">
                         <tr>
                             <td><c:out value="${cli.nombre}"/></td>
-                            <td><c:out value="${cli.telefono}" default="—"/></td>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${not empty cli.telefono}">
+                                        <c:set var="tel" value="${fn:replace(fn:replace(fn:replace(fn:replace(fn:replace(cli.telefono, ' ', ''), '-', ''), '(', ''), ')', ''), '+', '')}"/>
+                                        <a href="https://wa.me/549<c:out value='${tel}'/>" target="_blank" rel="noopener noreferrer">
+                                            <c:out value="${cli.telefono}"/>
+                                        </a>
+                                    </c:when>
+                                    <c:otherwise>—</c:otherwise>
+                                </c:choose>
+                            </td>
                             <td><c:out value="${cli.email}" default="—"/></td>
                             <td class="acciones">
                                 <a class="btn gris chico" href="${pageContext.request.contextPath}/cliente/editar?id=${cli.idcliente}">Editar</a>
