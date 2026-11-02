@@ -40,7 +40,13 @@ public class TurnoFacade extends AbstractFacade<Turno> {
                 + "JOIN FETCH t.servicioIdservicio ORDER BY t.fechaInicio", Turno.class)
                 .getResultList();
     }
-
+    /** Turnos de un servicio, con su cliente, ordenados por fecha de inicio. */
+    public List<Turno> findByServicio(Integer idservicio) {
+        return em.createQuery("SELECT t FROM Turno t JOIN FETCH t.clienteIdcliente "
+                + "WHERE t.servicioIdservicio.idservicio = :id ORDER BY t.fechaInicio", Turno.class)
+                .setParameter("id", idservicio)
+                .getResultList();
+    }
     /**
      * Turnos que ocupan el horario y se superponen con [inicio, fin).
      * idExcluir (opcional): turno a ignorar, para cuando se está editando.
