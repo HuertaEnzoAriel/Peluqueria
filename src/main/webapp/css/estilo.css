@@ -1,0 +1,87 @@
+@import url("https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;500;600;700&display=swap");
+
+:root {
+  --tinta:#1f2a33; --tinta-2:#34424e; --papel:#f4f5f7; --blanco:#ffffff;
+  --fucsia:#b0156b; --fucsia-osc:#8e0f57; --verde:#0f766e; --rojo:#b42318; --gris:#5b6672;
+  --borde:#dde1e6; --texto:#1c2530; --suave:#5f6b78;
+  --display:"Bricolage Grotesque","Trebuchet MS",system-ui,sans-serif;
+  --cuerpo:"Figtree","Segoe UI",system-ui,sans-serif;
+}
+* { box-sizing:border-box; }
+body { margin:0; font-family:var(--cuerpo); font-size:1rem; line-height:1.5; background:var(--papel); color:var(--texto); }
+:focus-visible { outline:3px solid var(--fucsia); outline-offset:2px; }
+
+/* Menú superior con banda de baldosas */
+nav.menu { position:relative; background:var(--tinta); display:flex; flex-wrap:wrap; align-items:center; gap:2px; padding:0 24px; }
+nav.menu::after { content:""; position:absolute; left:0; right:0; top:100%; height:10px;
+  background:repeating-conic-gradient(var(--tinta) 0% 25%, var(--blanco) 0% 50%) 0 0 / 20px 20px; }
+nav.menu :focus-visible { outline-color:#ffffff; outline-offset:-3px; }
+nav.menu .marca { font-family:var(--display); font-weight:800; font-size:1.25rem; color:#ffffff; text-decoration:none; margin-right:20px; padding:12px 0; }
+nav.menu a, nav.menu .drop > span { color:#dfe6ec; text-decoration:none; padding:16px 14px; display:block; cursor:pointer; transition:background .15s, color .15s; }
+nav.menu a:hover, nav.menu .drop:hover > span, nav.menu .drop:focus-within > span { background:var(--fucsia); color:#ffffff; }
+nav.menu .marca:hover { background:transparent; }
+nav.menu .drop { position:relative; }
+nav.menu .drop ul { display:none; position:absolute; top:100%; left:0; min-width:230px; margin:0; padding:6px 0; list-style:none; background:var(--blanco); border:1px solid var(--borde); border-radius:0 0 10px 10px; box-shadow:0 8px 24px rgba(31,42,51,.18); z-index:10; }
+nav.menu .drop:hover ul, nav.menu .drop:focus-within ul { display:block; }
+nav.menu .drop ul a { color:var(--texto); padding:10px 16px; }
+nav.menu .drop ul a:hover { background:#fbe9f3; color:var(--fucsia-osc); }
+nav.menu .drop ul .vacio { padding:10px 16px; color:var(--suave); }
+
+/* Contenido */
+main { max-width:960px; margin:40px auto 56px; padding:0 20px; }
+main a:not(.btn) { color:var(--fucsia); }
+h1 { font-family:var(--display); font-weight:800; font-size:2rem; line-height:1.15; letter-spacing:-.01em; margin:0 0 6px; }
+h2 { font-family:var(--display); font-weight:600; font-size:1.2rem; margin:0 0 6px; }
+.sub { color:var(--suave); margin:0 0 24px; }
+.tarjeta { background:var(--blanco); border:1px solid var(--borde); border-radius:10px; padding:22px; margin-bottom:20px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px; }
+.grid .tarjeta p { color:var(--suave); margin:0 0 16px; font-size:.95rem; }
+.portada { background:var(--tinta); color:#ffffff; border-radius:12px; padding:32px 28px; margin-bottom:28px; }
+.portada h1 { font-size:2.2rem; line-height:1.1; margin:0 0 8px; }
+.portada .sub { color:#c9d3dc; margin:0 0 20px; max-width:52ch; }
+
+/* Botones */
+.btn { display:inline-block; padding:9px 20px; background:var(--fucsia); color:#ffffff; text-decoration:none; border:0; border-radius:999px; font-family:inherit; font-size:.92rem; font-weight:600; cursor:pointer; transition:background .15s; }
+.btn:hover { background:var(--fucsia-osc); }
+.btn.verde { background:var(--verde); } .btn.verde:hover { background:#0b5d56; }
+.btn.rojo { background:var(--rojo); } .btn.rojo:hover { background:#8f1c12; }
+.btn.gris { background:var(--gris); } .btn.gris:hover { background:#46505b; }
+.btn.chico { padding:5px 13px; font-size:.82rem; }
+
+/* Listados */
+.barra { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-bottom:18px; }
+table { width:100%; border-collapse:separate; border-spacing:0; background:var(--blanco); border:1px solid var(--borde); border-radius:10px; overflow:hidden; }
+th { text-align:left; font-weight:600; font-size:.9rem; color:var(--tinta-2); background:#eceff2; }
+th, td { padding:12px 14px; border-bottom:1px solid var(--borde); vertical-align:middle; }
+tr:last-child > td { border-bottom:0; }
+tr:hover > td { background:#fdf5f9; }
+td.num { text-align:right; font-variant-numeric:tabular-nums; }
+td.acciones { white-space:nowrap; width:1%; }
+td.acciones form { display:inline; }
+.vacio-msg { text-align:center; color:var(--suave); padding:28px; }
+
+/* Formularios */
+label { display:block; font-weight:600; font-size:.92rem; margin-bottom:5px; }
+input[type=text], input[type=number], input[type=email], input[type=tel], input[type=date], input[type=datetime-local], select {
+  width:100%; padding:10px 12px; border:1px solid #c5ccd4; border-radius:8px; background:var(--blanco); color:var(--texto); font-family:inherit; font-size:1rem; }
+input:focus, select:focus { border-color:var(--fucsia); }
+.campo { margin-bottom:16px; }
+.campos-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.error { background:#fdecea; border:1px solid #f3b8b2; color:#8f1c12; padding:14px 16px; border-radius:8px; margin-bottom:16px; }
+
+/* Chips y estados de turno */
+.chip { display:inline-flex; align-items:center; gap:6px; background:#eceff2; color:var(--tinta-2); padding:3px 11px; border-radius:999px; font-size:.82rem; font-weight:600; }
+.chip.estado::before { content:""; width:8px; height:8px; border-radius:50%; background:currentColor; }
+.chip.PENDIENTE  { background:#fff4dc; color:#8a4b08; }
+.chip.CONFIRMADO { background:#e8efff; color:#1e40af; }
+.chip.ATENDIDO   { background:#def5f1; color:#0f5f58; }
+.chip.CANCELADO  { background:#fde8e8; color:#9b1c1c; }
+.chip.AUSENTE    { background:#eceef1; color:#4b5563; }
+
+@media (max-width:640px) {
+  nav.menu { padding:0 12px; }
+  main { margin-top:32px; }
+  .campos-2 { grid-template-columns:1fr; }
+  table { display:block; overflow-x:auto; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
