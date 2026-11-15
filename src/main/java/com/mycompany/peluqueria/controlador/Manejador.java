@@ -22,6 +22,7 @@ import java.util.Date;
 import sesiones.ClienteFacade;
 import sesiones.ServicioFacade;
 import sesiones.TurnoFacade;
+import java.time.LocalDate;
 
 @WebServlet(name = "Manejador", loadOnStartup = 1, urlPatterns = {
     "/cliente/listar", "/cliente/nuevo", "/cliente/editar", "/cliente/guardar", "/cliente/eliminar",
@@ -165,20 +166,22 @@ public class Manejador extends HttpServlet {
 
                 // ---------- TURNO ----------
                 case "/turno/listar":
-                    String filtro = request.getParameter("estado");
-                    if (vacio(filtro)) {
-                        request.setAttribute("lista", turnoFacade.findAll());
-                    } else {
-                        Estado estadoFiltro;
+                    String texto = opcional(request, "q");
+                    String fechaTxt = opcional(request, "fecha");
+                    Date desde = null;
+                    Date hasta = null;
+                    if (fechaTxt != null) {
                         try {
-                            estadoFiltro = Estado.valueOf(filtro.trim());
-                        } catch (IllegalArgumentException ex) {
-                            throw new IllegalArgumentException("El estado indicado no es válido.");
+                            LocalDate dia = LocalDate.parse(fechaTxt);
+                            desde = Date.from(dia.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                            hasta = Date.from(dia.plusDays(1).atStartOfDay(ZoneId.systemDefault()).toInstant());
+                        } catch (DateTimeParseException ex) {
+                            throw new IllegalArgumentException("La fecha indicada no tiene un formato válido.");
                         }
-                        request.setAttribute("lista", turnoFacade.findByEstado(estadoFiltro));
-                        request.setAttribute("estadoFiltro", estadoFiltro);
                     }
-                    request.setAttribute("estados", Estado.values());
+                    request.setAttribute("lista", turnoFacade.buscar(texto, desde, hasta));
+                    request.setAttribute("busqueda", texto);
+                    request.setAttribute("fecha", fechaTxt);
                     url = "/WEB-INF/vista/turno/listar.jsp";
                     break;
 

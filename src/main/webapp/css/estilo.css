@@ -85,7 +85,13 @@ input:focus, select:focus { border-color:var(--fucsia); }
   table { display:block; overflow-x:auto; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition:none !important; } }
-/* Filtro de turnos por estado */
+/* Filtro de turnos: buscador con lupa y fecha */
 .filtro { display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:16px; }
 .filtro label { margin:0; }
-.filtro select { width:auto; min-width:220px; }
+.filtro .buscar { display:inline-flex; align-items:stretch; flex:1 1 280px; max-width:420px; }
+.filtro .buscar input { flex:1; min-width:0; border-radius:999px 0 0 999px; padding-left:16px; }
+.filtro .buscar .lupa { display:inline-flex; align-items:center; padding:8px 14px; border-radius:0 999px 999px 0; }
+.filtro input[type=date] { width:auto; }
+/* Botones de las tarjetas del inicio */
+.acciones-tarjeta { display:flex; flex-wrap:wrap; gap:10px; }
+.acciones-tarjeta .btn { flex:1 1 auto; text-align:center; padding:9px 12px; font-size:.9rem; }
