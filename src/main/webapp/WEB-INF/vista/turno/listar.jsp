@@ -19,19 +19,25 @@
                 </div>
                 <a class="btn verde" href="${pageContext.request.contextPath}/turno/nuevo">Nuevo turno</a>
             </div>
-            <form class="filtro" method="get" action="${pageContext.request.contextPath}/turno/listar">
-                <label for="estado">Estado</label>
-                <select id="estado" name="estado">
-                    <option value="">Todos los estados</option>
-                    <c:forEach var="e" items="${estados}">
-                        <option value="${e}" ${e == estadoFiltro ? 'selected' : ''}>
-                            <c:out value="${e}"/>
-                        </option>
-                    </c:forEach>
-                </select>
-                <br>
-                <button type="submit" class="btn">Filtrar</button>
-                <c:if test="${not empty estadoFiltro}">
+            <form class="filtro" id="form-filtro" method="get"
+                  action="${pageContext.request.contextPath}/turno/listar">
+                <span class="buscar">
+                    <input type="text" id="q" name="q" maxlength="60" autocomplete="off"
+                           placeholder="Buscar por cliente, servicio o estado"
+                           aria-label="Buscar por cliente, servicio o estado"
+                           value="<c:out value='${busqueda}'/>">
+                    <button type="submit" class="btn gris lupa" aria-label="Buscar">
+                        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor"
+                             stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/>
+                        </svg>
+                    </button>
+                </span>
+
+                <label for="fecha">Fecha</label>
+                <input type="date" id="fecha" name="fecha" value="<c:out value='${fecha}'/>">
+
+                <c:if test="${not empty busqueda or not empty fecha}">
                     <a class="btn gris" href="${pageContext.request.contextPath}/turno/listar">Quitar filtro</a>
                 </c:if>
             </form>
@@ -39,21 +45,20 @@
             <table>
                 <thead>
                     <tr>
-                        <th>Fecha y hora</th>
+                        <th>Fecha</th>
+                        <th>Hora</th>
                         <th>Cliente</th>
                         <th>Servicio</th>
                         <th>Estado</th>
                         <th>Cobrado</th>
-                        <th></th>
+                        <th>Acciones</th>
                     </tr>
                 </thead>
                 <tbody>
                     <c:forEach var="t" items="${lista}">
                         <tr>
-                            <td>
-                                <fmt:formatDate value="${t.fechaInicio}" pattern="dd/MM/yyyy HH:mm"/>
-                                a <fmt:formatDate value="${t.fechaFin}" pattern="HH:mm"/>
-                            </td>
+                            <td><fmt:formatDate value="${t.fechaInicio}" pattern="dd/MM/yyyy"/></td>
+                            <td><fmt:formatDate value="${t.fechaInicio}" pattern="HH:mm"/> a <fmt:formatDate value="${t.fechaFin}" pattern="HH:mm"/></td>
                             <td><c:out value="${t.clienteIdcliente.nombre}"/></td>
                             <td><c:out value="${t.servicioIdservicio.nombre}"/></td>
                             <td><span class="chip estado ${t.estado}"><c:out value="${t.estado}"/></span></td>
@@ -70,9 +75,9 @@
                     </c:forEach>
                     <c:if test="${empty lista}">
                         <tr>
-                            <td colspan="6" class="vacio-msg">
+                            <td colspan="7" class="vacio-msg">
                                 <c:choose>
-                                    <c:when test="${not empty estadoFiltro}">No hay turnos con ese estado.</c:when>
+                                    <c:when test="${not empty busqueda or not empty fecha}">No hay turnos que coincidan con lo que buscaste.</c:when>
                                     <c:otherwise>Todavía no hay turnos. Reservá el primero con “Nuevo turno”.</c:otherwise>
                                 </c:choose>
                             </td>
@@ -82,4 +87,30 @@
             </table>
         </main>
     </body>
+    <script>
+        (function () {
+            var form = document.getElementById('form-filtro');
+            var campo = document.getElementById('q');
+            var fecha = document.getElementById('fecha');
+            var espera;
+
+            // Filtra solo cuando dejás de escribir
+            campo.addEventListener('input', function () {
+                clearTimeout(espera);
+                espera = setTimeout(function () {
+                    form.submit();
+                }, 1300);
+            });
+            // Filtra apenas cambiás la fecha
+            fecha.addEventListener('change', function () {
+                form.submit();
+            });
+
+            // Tras recargar, vuelve el cursor al final del texto para seguir escribiendo
+            if (campo.value) {
+                campo.focus();
+                campo.setSelectionRange(campo.value.length, campo.value.length);
+            }
+        })();
+    </script>
 </html>
