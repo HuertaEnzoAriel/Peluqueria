@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.ArrayList;
 
 @Stateless
 public class TurnoFacade extends AbstractFacade<Turno> {
@@ -40,10 +41,52 @@ public class TurnoFacade extends AbstractFacade<Turno> {
                 + "JOIN FETCH t.servicioIdservicio ORDER BY t.fechaInicio", Turno.class)
                 .getResultList();
     }
-    public List<Turno> findByEstado(Estado estado) {
-        return em.createQuery("SELECT t FROM Turno t JOIN FETCH t.clienteIdcliente "
-                + "JOIN FETCH t.servicioIdservicio WHERE t.estado = :estado ORDER BY t.fechaInicio", Turno.class)
-                .setParameter("estado", estado).getResultList();
+        /**
+     * Turnos que coinciden con el texto (cliente, servicio o estado) y/o que empiezan
+     * en el rango [desde, hasta). Todos los parámetros son opcionales.
+     */
+    public List<Turno> buscar(String texto, Date desde, Date hasta) {
+        StringBuilder jpql = new StringBuilder(
+                "SELECT t FROM Turno t JOIN FETCH t.clienteIdcliente JOIN FETCH t.servicioIdservicio WHERE 1 = 1");
+        List<Estado> estados = new ArrayList<>();
+        if (texto != null) {
+            estados = estadosQueContienen(texto);
+            jpql.append(" AND (LOWER(t.clienteIdcliente.nombre) LIKE :texto ESCAPE '!'")
+                .append(" OR LOWER(t.servicioIdservicio.nombre) LIKE :texto ESCAPE '!'");
+            if (!estados.isEmpty()) {
+                jpql.append(" OR t.estado IN :estados");
+            }
+            jpql.append(")");
+        }
+        if (desde != null && hasta != null) {
+            jpql.append(" AND t.fechaInicio >= :desde AND t.fechaInicio < :hasta");
+        }
+        jpql.append(" ORDER BY t.fechaInicio");
+
+        TypedQuery<Turno> consulta = em.createQuery(jpql.toString(), Turno.class);
+        if (texto != null) {
+            String patron = texto.toLowerCase().replace("!", "!!").replace("%", "!%").replace("_", "!_");
+            consulta.setParameter("texto", "%" + patron + "%");
+            if (!estados.isEmpty()) {
+                consulta.setParameter("estados", estados);
+            }
+        }
+        if (desde != null && hasta != null) {
+            consulta.setParameter("desde", desde, TemporalType.TIMESTAMP);
+            consulta.setParameter("hasta", hasta, TemporalType.TIMESTAMP);
+        }
+        return consulta.getResultList();
+    }
+
+    /** Estados cuyo nombre contiene el texto (por ejemplo "conf" devuelve CONFIRMADO). */
+    private List<Estado> estadosQueContienen(String texto) {
+        List<Estado> encontrados = new ArrayList<>();
+        for (Estado e : Estado.values()) {
+            if (e.name().toLowerCase().contains(texto.toLowerCase())) {
+                encontrados.add(e);
+            }
+        }
+        return encontrados;
     }
     /** Turnos de un servicio, con su cliente, ordenados por fecha de inicio. */
     public List<Turno> findByServicio(Integer idservicio) {
