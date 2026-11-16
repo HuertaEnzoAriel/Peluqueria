@@ -12,6 +12,8 @@ Autor: Enzo Huerta
 - **Clientes:** alta, edición, baja y listado (nombre, teléfono, email).
 - **Servicios:** alta, edición, baja y listado (nombre, duración en minutos, precio).
 - **Turnos:** alta, edición, baja y agenda ordenada por fecha. Cada turno tiene un cliente, un servicio, un estado y el precio cobrado.
+- **Buscador de turnos:** la agenda se filtra por texto (cliente, servicio o estado) y por fecha.
+- **Cambio rápido de estado:** el estado de un turno se modifica directamente desde el listado, sin abrir el formulario.
 - **Menú dinámico:** el desplegable *Servicios* se arma con los servicios de la base y lleva a los turnos de cada uno.
 - **Validaciones:** campos obligatorios, formato de importes y fechas, y mensajes de error claros.
 
@@ -124,6 +126,10 @@ La aplicación queda en `http://localhost:8080/Peluqueria-1.0-SNAPSHOT/`.
 | `/cliente/listar` | Listado de clientes |
 | `/servicio/listar` | Listado de servicios |
 | `/turno/listar` | Agenda de turnos |
+| `/turno/listar?q=texto&fecha=AAAA-MM-DD` | Agenda filtrada por texto y/o fecha (ambos opcionales) |
+| `/turno/estado` | Cambia el estado de un turno desde el listado (solo POST) |
 | `/Servicio?codigoServ=ID` | Turnos de un servicio (desde el menú) |
 
-Cada módulo tiene además `nuevo`, `editar`, `guardar` y `eliminar`. Guardar y eliminar solo aceptan POST.
+Cada módulo tiene además `nuevo`, `editar`, `guardar` y `eliminar`. Guardar, eliminar y cambiar estado solo aceptan POST.
+
+> Nota: `JakartaEE10Resource` y `JakartaRestConfiguration` (ruta `/resources/jakartaee10`) vienen del arquetipo de NetBeans y no forman parte de la aplicación.
