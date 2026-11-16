@@ -71,10 +71,11 @@
                 </div>
 
                 <div class="campo">
-                    <label for="precio">Precio cobrado ($)</label>
+                    <label for="precio">Precio del turno ($)</label>
                     <input type="text" id="precio" name="precio" inputmode="decimal"
                            placeholder="Vacío = precio del servicio"
                            value="<c:out value='${turno.precio}'/>">
+                    <small class="ayuda">Dejalo vacío para usar el precio del servicio. Completalo solo si el importe es distinto (descuento, recargo).</small>
                 </div>
 
                 <button type="submit" class="btn verde">Guardar</button>
