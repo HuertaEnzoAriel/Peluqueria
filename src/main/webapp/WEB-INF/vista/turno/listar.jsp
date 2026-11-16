@@ -61,7 +61,17 @@
                             <td><fmt:formatDate value="${t.fechaInicio}" pattern="HH:mm"/> a <fmt:formatDate value="${t.fechaFin}" pattern="HH:mm"/></td>
                             <td><c:out value="${t.clienteIdcliente.nombre}"/></td>
                             <td><c:out value="${t.servicioIdservicio.nombre}"/></td>
-                            <td><span class="chip estado ${t.estado}"><c:out value="${t.estado}"/></span></td>
+                            <td>
+                                <form method="post" action="${pageContext.request.contextPath}/turno/estado">
+                                    <input type="hidden" name="id" value="${t.idturno}">
+                                    <select name="estado" class="chip estado ${t.estado}" aria-label="Estado del turno"
+                                            onchange="this.form.submit()">
+                                        <c:forEach var="e" items="${estados}">
+                                            <option value="${e}" ${e == t.estado ? 'selected' : ''}><c:out value="${e}"/></option>
+                                        </c:forEach>
+                                    </select>
+                                </form>
+                            </td>
                             <td class="num">$ <fmt:formatNumber value="${t.precio}" type="number" minFractionDigits="2" maxFractionDigits="2"/></td>
                             <td class="acciones">
                                 <a class="btn gris chico" href="${pageContext.request.contextPath}/turno/editar?id=${t.idturno}">Editar</a>

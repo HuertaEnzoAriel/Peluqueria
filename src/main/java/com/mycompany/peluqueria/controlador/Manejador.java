@@ -27,7 +27,7 @@ import java.time.LocalDate;
 @WebServlet(name = "Manejador", loadOnStartup = 1, urlPatterns = {
     "/cliente/listar", "/cliente/nuevo", "/cliente/editar", "/cliente/guardar", "/cliente/eliminar",
     "/servicio/listar", "/servicio/nuevo", "/servicio/editar", "/servicio/guardar", "/servicio/eliminar",
-    "/turno/listar", "/turno/nuevo", "/turno/editar", "/turno/guardar", "/turno/eliminar",
+    "/turno/listar", "/turno/nuevo", "/turno/editar", "/turno/guardar", "/turno/eliminar", "/turno/estado",
     "/Servicio"
 })
 public class Manejador extends HttpServlet {
@@ -182,6 +182,7 @@ public class Manejador extends HttpServlet {
                     request.setAttribute("lista", turnoFacade.buscar(texto, desde, hasta));
                     request.setAttribute("busqueda", texto);
                     request.setAttribute("fecha", fechaTxt);
+                    request.setAttribute("estados", Estado.values());
                     url = "/WEB-INF/vista/turno/listar.jsp";
                     break;
 
@@ -220,6 +221,15 @@ public class Manejador extends HttpServlet {
                     } else {
                         turnoFacade.guardarCambios(tur);
                     }
+                    response.sendRedirect(ctx + "/turno/listar");
+                    return;
+
+                case "/turno/estado":
+                    soloPost(request);
+                    Turno turEstado = existente(turnoFacade.find(idParam(request, "id")),
+                            "El turno solicitado no existe.");
+                    turEstado.setEstado(estado(request));
+                    turnoFacade.guardarCambios(turEstado);
                     response.sendRedirect(ctx + "/turno/listar");
                     return;
 
